@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const userStatSchema = new mongoose.Schema({
   season: {
@@ -30,6 +30,10 @@ const userStatSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
+  },
+  highest_tier_reached: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
   },
 });
 

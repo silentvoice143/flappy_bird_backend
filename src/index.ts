@@ -4,9 +4,15 @@ import cors from "cors";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import mongoConnect from "./mongoDB/mongo.connect";
-import authRoutes from "./routes/auth.routes";
 import { globalException } from "./exception/global-exception-handler";
-import { ensureSuperAdmin } from "./utils/superAdmin";
+
+// -----------seeds----------------
+import { ensureSuperAdmin } from "./seed/super-admin";
+import { ensureDefaultBird } from "./seed/default-bird";
+
+// ------------routes----------
+import authRoutes from "./routes/auth.routes";
+import birdRoutes from "./routes/bird.routes";
 
 dotenv.config();
 const app = express();
@@ -40,6 +46,7 @@ app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/birds", birdRoutes);
 
 app.get("/", (req, res) => {
   console.log("hello");
@@ -51,6 +58,7 @@ app.use(globalException);
 const startServer = async () => {
   await mongoConnect();
   ensureSuperAdmin();
+  ensureDefaultBird();
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Bird } from "./bird.model";
 const userSchema = new Schema({
   name: {
     type: String,
@@ -49,6 +50,16 @@ const userSchema = new Schema({
     required: true,
     default: 0,
   },
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.activeBird) {
+    const rookieBird = await Bird.findOne({ type: "rookie", lvl: 1 }).sort({
+      createdAt: 1,
+    });
+    if (rookieBird) this.activeBird = rookieBird._id;
+  }
+  next();
 });
 
 export const User = mongoose.model("User", userSchema);
