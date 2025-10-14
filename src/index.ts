@@ -9,11 +9,14 @@ import { globalException } from "./exception/global-exception-handler";
 // -----------seeds----------------
 import { ensureSuperAdmin } from "./seed/super-admin";
 import { ensureDefaultBird } from "./seed/default-bird";
+import { ensureDefaultTier } from "./seed/default-tier";
+import { ensureDefaultSeason } from "./seed/default-season";
 
 // ------------routes----------
 import authRoutes from "./routes/auth.routes";
 import birdRoutes from "./routes/bird.routes";
-import { ensureDefaultTier } from "./seed/default-tier";
+import tiersRoutes from "./routes/tier.routes";
+import { seasonCronJob } from "./jobs/season-updater";
 
 dotenv.config();
 const app = express();
@@ -48,6 +51,7 @@ app.use(cors());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/birds", birdRoutes);
+app.use("/api/tiers", tiersRoutes);
 
 app.get("/", (req, res) => {
   console.log("hello");
@@ -61,6 +65,8 @@ const startServer = async () => {
   ensureSuperAdmin();
   ensureDefaultBird();
   ensureDefaultTier();
+  ensureDefaultSeason();
+  seasonCronJob();
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

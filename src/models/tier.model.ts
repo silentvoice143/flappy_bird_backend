@@ -2,28 +2,58 @@ import mongoose from "mongoose";
 
 const tierSchema = new mongoose.Schema(
   {
-    title: {
+    // Main Tier Category (e.g., "Rookie", "Pro", "Elite")
+    category: {
       type: String,
       required: true,
       trim: true,
+      enum: ["Rookie", "Pro", "Elite", "Legend"], // add more if needed
+    },
+
+    // Sub level inside the category (e.g., 1, 2, 3)
+    level: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 10, // can adjust depending on how many sub-levels you want
+    },
+
+    // Full title: "Rookie 1", "Pro 2", etc.
+    title: {
+      type: String,
+      required: true,
       unique: true,
     },
-    min_exp_required: {
+
+    // XP required to reach this sub-tier
+    min_exp: {
       type: Number,
       required: true,
     },
+    max_exp: {
+      type: Number,
+      required: true,
+    },
+
+    // Multiplier or bonus for this specific sub-tier
     tier_multiplier: {
       type: Number,
       required: true,
       min: 0,
-      max: 1,
-      default: 0.2,
-    },
-    lvl: {
-      type: Number,
-      enum: [1, 2, 3],
+      max: 5,
       default: 1,
     },
+
+    // Used for sorting overall
+    overall_order: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+
+    // Optional UI/metadata
+    color: String,
+    badge_url: String,
   },
   { timestamps: true }
 );

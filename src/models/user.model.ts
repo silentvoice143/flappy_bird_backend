@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Bird } from "./bird.model";
+import { Tier } from "./tier.model";
 const userSchema = new Schema({
   name: {
     type: String,
@@ -53,11 +54,18 @@ const userSchema = new Schema({
 });
 
 userSchema.pre("save", async function (next) {
-  if (!this.activeBird) {
+  if (this.isNew && !this.activeBird) {
     const rookieBird = await Bird.findOne({ type: "rookie", lvl: 1 }).sort({
       createdAt: 1,
     });
+    const rookieTier = await Tier.findOne({
+      category: "Rookie",
+      level: 1,
+      overall_order: 1,
+    });
+
     if (rookieBird) this.activeBird = rookieBird._id;
+    if (rookieTier) this.currentTier = rookieTier._id;
   }
   next();
 });

@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createTier,
-  getTier,
+  getTiers,
   editTier,
   deleteTier,
 } from "../controllers/tier.controller";
@@ -13,14 +13,14 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Tiers
- *   description: Tier management
+ *   description: Tier management (Rookie, Pro, Elite, etc. with sub-levels)
  */
 
 /**
  * @swagger
  * /tiers:
  *   post:
- *     summary: Create a new tier
+ *     summary: Create a new tier (like Rookie 1, Pro 2, etc.)
  *     tags: [Tiers]
  *     requestBody:
  *       required: true
@@ -29,21 +29,33 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - min_exp_required
+ *               - category
+ *               - level
+ *               - min_exp
+ *               - max_exp
  *               - tier_multiplier
+ *               - overall_order
  *             properties:
- *               title:
+ *               category:
  *                 type: string
- *                 example: Bronze
- *               min_exp_required:
+ *                 example: Rookie
+ *               level:
  *                 type: number
- *                 example: 100
+ *                 example: 2
+ *               min_exp:
+ *                 type: number
+ *                 example: 500
+ *               max_exp:
+ *                 type: number
+ *                 example: 999
  *               tier_multiplier:
  *                 type: number
- *                 example: 1.2
+ *                 example: 1.1
+ *               overall_order:
+ *                 type: number
+ *                 example: 2
  *     responses:
- *       200:
+ *       201:
  *         description: Tier successfully created
  *       409:
  *         description: Tier already exists
@@ -56,7 +68,7 @@ router.post("/", catchAsync(createTier));
  * @swagger
  * /tiers:
  *   get:
- *     summary: Get all tiers
+ *     summary: Get all tiers (sorted by overall order)
  *     tags: [Tiers]
  *     responses:
  *       200:
@@ -64,7 +76,7 @@ router.post("/", catchAsync(createTier));
  *       500:
  *         description: Failed to fetch tiers
  */
-router.get("/", catchAsync(getTier));
+router.get("/", catchAsync(getTiers));
 
 /**
  * @swagger
@@ -86,15 +98,24 @@ router.get("/", catchAsync(getTier));
  *           schema:
  *             type: object
  *             properties:
- *               title:
+ *               category:
  *                 type: string
- *                 example: Silver
- *               min_exp_required:
+ *                 example: Pro
+ *               level:
  *                 type: number
- *                 example: 300
+ *                 example: 3
+ *               min_exp:
+ *                 type: number
+ *                 example: 2000
+ *               max_exp:
+ *                 type: number
+ *                 example: 2499
  *               tier_multiplier:
  *                 type: number
- *                 example: 1.5
+ *                 example: 1.4
+ *               overall_order:
+ *                 type: number
+ *                 example: 5
  *     responses:
  *       200:
  *         description: Tier updated successfully
