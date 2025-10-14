@@ -13,6 +13,7 @@ import { ensureDefaultBird } from "./seed/default-bird";
 // ------------routes----------
 import authRoutes from "./routes/auth.routes";
 import birdRoutes from "./routes/bird.routes";
+import { ensureDefaultTier } from "./seed/default-tier";
 
 dotenv.config();
 const app = express();
@@ -59,6 +60,7 @@ const startServer = async () => {
   await mongoConnect();
   ensureSuperAdmin();
   ensureDefaultBird();
+  ensureDefaultTier();
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

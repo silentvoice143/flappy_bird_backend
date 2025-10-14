@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 
 import { OAuth2Client } from "google-auth-library";
 import bcrypt from "bcryptjs";

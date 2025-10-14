@@ -6,6 +6,7 @@ const tierSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     min_exp_required: {
       type: Number,
@@ -17,6 +18,11 @@ const tierSchema = new mongoose.Schema(
       min: 0,
       max: 1,
       default: 0.2,
+    },
+    lvl: {
+      type: Number,
+      enum: [1, 2, 3],
+      default: 1,
     },
   },
   { timestamps: true }
