@@ -16,6 +16,10 @@ import { ensureDefaultSeason } from "./seed/default-season";
 import authRoutes from "./routes/auth.routes";
 import birdRoutes from "./routes/bird.routes";
 import tiersRoutes from "./routes/tier.routes";
+import storeRoutes from "./routes/store.routes";
+import userItemRoutes from "./routes/userItem.routes";
+
+//--------------cron-jobs----------------
 import { seasonCronJob } from "./jobs/season-updater";
 
 dotenv.config();
@@ -52,6 +56,8 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/birds", birdRoutes);
 app.use("/api/tiers", tiersRoutes);
+app.use("/api/store-items", storeRoutes);
+app.use("/api/user-items", userItemRoutes);
 
 app.get("/", (req, res) => {
   console.log("hello");

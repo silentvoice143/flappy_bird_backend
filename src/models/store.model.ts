@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const offerSchema = new mongoose.Schema(
+  {
+    percentage: { type: Number, min: 0, max: 100, required: true }, // % off
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+  },
+  { _id: false } // prevent creating a separate _id for the subdocument
+);
+
 const storeItemSchema = new mongoose.Schema(
   {
     name: {
@@ -25,13 +34,21 @@ const storeItemSchema = new mongoose.Schema(
       // The 'refPath' dynamically tells Mongoose which model to reference
       refPath: "itemType",
     },
-    // Common metadata
+
     isAvailable: {
       type: Boolean,
       default: true,
     },
+    offer: {
+      type: offerSchema,
+      default: null,
+    },
   },
   { timestamps: true }
 );
+storeItemSchema.index({ itemType: 1, isAvailable: 1 }); // common filter
+storeItemSchema.index({ itemId: 1 }); // for populate lookups
+storeItemSchema.index({ name: "text" }); // for search
+storeItemSchema.index({ price: 1 }); // for sorting/filtering by price
 
 export const StoreItem = mongoose.model("StoreItem", storeItemSchema);

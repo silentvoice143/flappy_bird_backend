@@ -1,4 +1,10 @@
-import { createBird, getAllBirds } from "./../controllers/bird.controller";
+import {
+  createBird,
+  getAllBirds,
+  getBirdById,
+  updateBird,
+  deleteBird,
+} from "../controllers/bird.controller";
 import express from "express";
 import { createMulterUpload } from "../utils/multer";
 import { catchAsync } from "../utils/catchAsync";
@@ -6,7 +12,7 @@ import { handleMulterErrors } from "../utils/multerErrorHandler";
 
 const router = express.Router();
 
-// Create multer instance for bird images
+// Multer instance for bird images
 const upload = createMulterUpload("image", "uploads/birds", 5);
 
 /**
@@ -21,7 +27,7 @@ const upload = createMulterUpload("image", "uploads/birds", 5);
  * /birds:
  *   post:
  *     summary: Create a new bird
- *     description: Upload a bird image (JPG/PNG/WEBP) along with details like name, type, and multiplier. The image will be stored in the backend and the URL saved in MongoDB.
+ *     description: Upload a bird image (JPG/PNG/WEBP) along with details.
  *     tags: [Birds]
  *     requestBody:
  *       required: true
@@ -36,76 +42,25 @@ const upload = createMulterUpload("image", "uploads/birds", 5);
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Blue Falcon"
- *                 description: Unique name of the bird.
  *               type:
  *                 type: string
  *                 enum: [rookie, pro, elite]
- *                 example: "pro"
  *               lvl:
  *                 type: number
- *                 example: 3
- *                 description: Level of the bird.
  *               multiplier:
  *                 type: number
- *                 example: 2
- *                 description: Score multiplier for this bird.
  *               points:
  *                 type: number
- *                 example: 50
- *                 description: Optional initial points.
  *               image:
  *                 type: string
  *                 format: binary
- *                 description: Bird image (JPG, PNG, or WEBP; max 5MB)
  *     responses:
  *       201:
- *         description: Bird created successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Bird created successfully!
- *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: 671aa4d20f5b3e9c1e6f9a7b
- *                     name:
- *                       type: string
- *                       example: Blue Falcon
- *                     type:
- *                       type: string
- *                       example: pro
- *                     lvl:
- *                       type: number
- *                       example: 3
- *                     multiplier:
- *                       type: number
- *                       example: 2
- *                     imageUrl:
- *                       type: string
- *                       example: /uploads/birds/blue-falcon-1712345678901.png
- *                     points:
- *                       type: number
- *                       example: 50
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
+ *         description: Bird created successfully
  *       400:
- *         description: Invalid file type or file too large.
+ *         description: Invalid request or file
  *       500:
- *         description: Internal server error.
+ *         description: Server error
  */
 router.post(
   "/",
@@ -118,48 +73,107 @@ router.post(
  * /birds:
  *   get:
  *     summary: Get all birds
- *     description: Retrieve a list of all birds stored in the database.
  *     tags: [Birds]
  *     responses:
  *       200:
- *         description: List of birds fetched successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         example: 671aa4d20f5b3e9c1e6f9a7b
- *                       name:
- *                         type: string
- *                         example: Blue Falcon
- *                       type:
- *                         type: string
- *                         example: pro
- *                       lvl:
- *                         type: number
- *                         example: 3
- *                       multiplier:
- *                         type: number
- *                         example: 2
- *                       imageUrl:
- *                         type: string
- *                         example: /uploads/birds/blue-falcon-1712345678901.png
- *                       points:
- *                         type: number
- *                         example: 50
+ *         description: List of birds
  *       500:
- *         description: Server error while fetching birds.
+ *         description: Server error
  */
 router.get("/", catchAsync(getAllBirds));
+
+/**
+ * @swagger
+ * /birds/{id}:
+ *   get:
+ *     summary: Get a bird by ID
+ *     tags: [Birds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB ObjectId of the bird
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bird found
+ *       404:
+ *         description: Bird not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/:id", catchAsync(getBirdById));
+
+/**
+ * @swagger
+ * /birds/{id}:
+ *   put:
+ *     summary: Update a bird
+ *     tags: [Birds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: MongoDB ObjectId of the bird
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [rookie, pro, elite]
+ *               lvl:
+ *                 type: number
+ *               multiplier:
+ *                 type: number
+ *               points:
+ *                 type: number
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Bird updated successfully
+ *       404:
+ *         description: Bird not found
+ *       500:
+ *         description: Server error
+ */
+router.put(
+  "/:id",
+  handleMulterErrors(upload.single("image")),
+  catchAsync(updateBird)
+);
+
+/**
+ * @swagger
+ * /birds/{id}:
+ *   delete:
+ *     summary: Delete a bird
+ *     tags: [Birds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB ObjectId of the bird
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Bird deleted successfully
+ *       404:
+ *         description: Bird not found
+ *       500:
+ *         description: Server error
+ */
+router.delete("/:id", catchAsync(deleteBird));
 
 export default router;
