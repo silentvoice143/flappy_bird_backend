@@ -1,4 +1,20 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Mongoose, Types } from "mongoose";
+import { IUser } from "./user.model";
+import { ISeason } from "./season.model";
+import { ITier } from "./tier.model";
+
+export interface IUserStat extends Document {
+  user: Types.ObjectId | IUser;
+  season: Types.ObjectId | ISeason;
+  total_game_played: number;
+  total_ads_watched: number;
+  total_coin_earned: number;
+  score: number;
+  best_score: number;
+  highest_tier_reached?: Types.ObjectId | ITier;
+  createdAt: NativeDate;
+  updatedAt: NativeDate;
+}
 
 const userStatSchema = new mongoose.Schema(
   {
@@ -26,6 +42,11 @@ const userStatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
+    },
+    score: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     best_score: {
       type: Number,

@@ -34,7 +34,7 @@ export const googleLogin = async (req: Request, res: Response) => {
       profilePic: picture,
       isGoogleUser: true,
       phone: "",
-      today_coin_earned: 0,
+      coin_earned: 0,
     });
     await user.save();
   }
@@ -50,7 +50,7 @@ export const googleLogin = async (req: Request, res: Response) => {
         email: user.email,
         phone: user.phone,
         name: user.name,
-        today_coin_earned: user.today_coin_earned || 0,
+        coin_earned: user.coin_earned || 0,
       },
     },
   });
@@ -88,7 +88,7 @@ export const passwordLogin = async (req: Request, res: Response) => {
         name: user.name,
         phone: user.phone,
         profilePic: user.profilePic,
-        today_coin_earned: user.today_coin_earned || 0,
+        coin_earned: user.coin_earned || 0,
       },
     },
   });

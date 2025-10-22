@@ -1,4 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+export interface ITier extends Document {
+  category: "Rookie" | "Pro" | "Elite" | "Legend"; // matches schema enum
+  level: number;
+  title: string;
+  min_score: number;
+  max_score: number;
+  tier_multiplier: number;
+  overall_order: number;
+  color?: string;
+  badge_url?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const tierSchema = new mongoose.Schema(
   {
@@ -25,12 +39,12 @@ const tierSchema = new mongoose.Schema(
       unique: true,
     },
 
-    // XP required to reach this sub-tier
-    min_exp: {
+    // score required to reach this sub-tier
+    min_score: {
       type: Number,
       required: true,
     },
-    max_exp: {
+    max_score: {
       type: Number,
       required: true,
     },

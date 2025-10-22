@@ -1,6 +1,26 @@
-import mongoose, { Schema } from "mongoose";
-import { Bird } from "./bird.model";
-import { Tier } from "./tier.model";
+import mongoose, { Schema, Types } from "mongoose";
+import { Bird, IBird } from "./bird.model";
+import { ITier, Tier } from "./tier.model";
+import { Document } from "mongoose";
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  role: "user" | "admin" | "super_admin";
+  profilePic?: string;
+  isGoogleUser: boolean;
+  phone?: string;
+  password?: string;
+  createdAt: Date;
+  activeBird?: Types.ObjectId | IBird; // populated or ObjectId
+  currentTier?: Types.ObjectId | ITier; // populated or ObjectId
+  coin_earned: number;
+  adsWatchedToday: {
+    banner: number;
+    interstitial: number;
+    rewarded: number;
+  };
+}
 const userSchema = new Schema({
   name: {
     type: String,
@@ -46,10 +66,15 @@ const userSchema = new Schema({
     ref: "Tier",
     default: null,
   },
-  today_coin_earned: {
+  coin_earned: {
     type: Number,
     required: true,
     default: 0,
+  },
+  adsWatchedToday: {
+    banner: { type: Number, default: 0 },
+    interstitial: { type: Number, default: 0 },
+    rewarded: { type: Number, default: 0 },
   },
 });
 

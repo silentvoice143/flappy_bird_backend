@@ -31,8 +31,8 @@ const router = express.Router();
  *             required:
  *               - category
  *               - level
- *               - min_exp
- *               - max_exp
+ *               - min_score
+ *               - max_score
  *               - tier_multiplier
  *               - overall_order
  *             properties:
@@ -42,10 +42,10 @@ const router = express.Router();
  *               level:
  *                 type: number
  *                 example: 2
- *               min_exp:
+ *               min_score:
  *                 type: number
  *                 example: 500
- *               max_exp:
+ *               max_score:
  *                 type: number
  *                 example: 999
  *               tier_multiplier:
@@ -54,6 +54,12 @@ const router = express.Router();
  *               overall_order:
  *                 type: number
  *                 example: 2
+ *               color:
+ *                 type: string
+ *                 example: "#FFD700"
+ *               badge_url:
+ *                 type: string
+ *                 example: "https://example.com/badge.png"
  *     responses:
  *       201:
  *         description: Tier successfully created
@@ -104,10 +110,10 @@ router.get("/", catchAsync(getTiers));
  *               level:
  *                 type: number
  *                 example: 3
- *               min_exp:
+ *               min_score:
  *                 type: number
  *                 example: 2000
- *               max_exp:
+ *               max_score:
  *                 type: number
  *                 example: 2499
  *               tier_multiplier:
@@ -116,6 +122,12 @@ router.get("/", catchAsync(getTiers));
  *               overall_order:
  *                 type: number
  *                 example: 5
+ *               color:
+ *                 type: string
+ *                 example: "#C0C0C0"
+ *               badge_url:
+ *                 type: string
+ *                 example: "https://example.com/badge.png"
  *     responses:
  *       200:
  *         description: Tier updated successfully

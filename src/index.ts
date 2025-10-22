@@ -18,9 +18,12 @@ import birdRoutes from "./routes/bird.routes";
 import tiersRoutes from "./routes/tier.routes";
 import storeRoutes from "./routes/store.routes";
 import userItemRoutes from "./routes/userItem.routes";
+import gameRoutes from "./routes/game.routes";
+import userRoutes from "./routes/user.routes";
 
 //--------------cron-jobs----------------
 import { seasonCronJob } from "./jobs/season-updater";
+import { dailyRewardCron } from "./jobs/dailyReward";
 
 dotenv.config();
 const app = express();
@@ -58,6 +61,8 @@ app.use("/api/birds", birdRoutes);
 app.use("/api/tiers", tiersRoutes);
 app.use("/api/store-items", storeRoutes);
 app.use("/api/user-items", userItemRoutes);
+app.use("/api/games", gameRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   console.log("hello");
@@ -73,6 +78,7 @@ const startServer = async () => {
   ensureDefaultTier();
   ensureDefaultSeason();
   seasonCronJob();
+  dailyRewardCron();
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {

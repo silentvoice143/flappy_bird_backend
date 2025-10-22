@@ -1,4 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+// Interface for Bird document
+export interface IBird extends Document {
+  name: string;
+  type: "rookie" | "pro" | "elite";
+  lvl: number;
+  multiplier: number;
+  imageUrl?: string;
+  points: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const birdSchema = new mongoose.Schema(
   {
