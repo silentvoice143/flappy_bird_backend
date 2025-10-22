@@ -37,7 +37,7 @@ export const protect = async (
     const user = await User.findById(decoded.id);
     if (!user) return res.status(401).json({ message: "Invalid user" });
 
-    req.user = user;
+    req.user = user as any;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized" });

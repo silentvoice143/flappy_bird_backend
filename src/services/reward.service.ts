@@ -1,4 +1,4 @@
-import User from "../models/user.model";
+import { User } from "../models/user.model";
 
 export const calculateDailyRewardIfNotGiven = async (
   user: typeof User.prototype
@@ -7,7 +7,7 @@ export const calculateDailyRewardIfNotGiven = async (
   today.setHours(0, 0, 0, 0);
 
   const stat = user.dailyStats.find(
-    (s) => new Date(s.date).getTime() === today.getTime()
+    (s: any) => new Date(s.date).getTime() === today.getTime()
   );
 
   if (!stat || stat.coinsAwarded !== undefined) return;

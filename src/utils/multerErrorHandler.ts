@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 export const handleMulterErrors =
   (uploadInstance: any) =>
   (req: Request, res: Response, next: NextFunction) => {
-    uploadInstance(req, res, (err) => {
+    uploadInstance(req, res, (err: any) => {
       if (err) {
         if (err.code === "LIMIT_FILE_SIZE") {
           return res
